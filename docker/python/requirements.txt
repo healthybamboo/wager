@@ -1,0 +1,9 @@
+Django
+djangorestframework
+mysqlclient
+pytest-django
+freezegun
+pytest
+pytest-django
+pytest-mock
+pyjwt 

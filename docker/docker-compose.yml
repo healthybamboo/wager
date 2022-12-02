@@ -1,0 +1,38 @@
+version: '3'
+services:
+    mysql:
+      build: ./mysql
+      restart: always
+      container_name: wager-db
+      environment:
+          MYSQL_ROOT_PASSWORD: ${POTIPO_MYSQL_ROOT_PASSWORD}
+          MYSQL_USER: ${POTIPO_MYSQL_USER}
+          MYSQL_PASSWORD: ${POTIPO_MYSQL_PASSWORD}
+      volumes:
+        - tmp:/var/run/mysqld
+        - mysql_db_data:/var/lib/mysql
+        - ./mysql/db/my.cnf:/etc/mysql/conf.d/my.cnf
+        - ./mysql/db/sql:/docker-entrypoint-initdb.d
+      ports:
+        - 3306:3306
+      command: mysqld --character-set-server=utf8 --collation-server=utf8_unicode_ci 
+    web:
+      container_name: wager
+      build: ./python
+      environment:
+          DJANGO_SETTINGS_MODULE: wager.settings
+      volumes:
+         - ../backend/wager/:/home/wager/
+         - tmp:/run/mysqld
+      ports:
+         - 8000:8000
+      tty: true
+      stdin_open: true
+volumes:
+    mysql_db_data:
+      driver: local
+    tmp:
+      driver: local
+
+
+ 
