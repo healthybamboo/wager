@@ -20,10 +20,10 @@ class UserSerializer(serializers.Serializer):
         
 # 収支のシリアライザー
 class SpendingSerializer(serializers.Serializer):
+    id = serializers.IntegerField(read_only=True,required=False)
     date = serializers.DateField()
-    category = serializers.CharField()
+    category = serializers.CharField(max_length=30)
     memo = serializers.CharField(max_length=100)
-    user = serializers.SerializerMethodField(read_only =True)
 
     # 収支一覧を登録するためのシリアライザ
     def create(self,validate_date):
@@ -32,7 +32,6 @@ class SpendingSerializer(serializers.Serializer):
     # 収支一覧を更新するためのシリアライザ
     def update(self,validate_date):
         return Spending(**validate_date)
-
 
 # 収支詳細のシリアライザー
 class SpendingDetailSerializer(serializers.Serializer):
