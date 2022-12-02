@@ -4,7 +4,7 @@
         "pk": 1,
         "fields": {
             "username": "MrPython",
-            "password": "password1234",
+            "password": "pbkdf2_sha256$390000$RnId584iyuIUyUbAaTu9lE$qHv8nMMfxkYOUFL4q7JOQd9CZktFoiSwC9xYjhKB3iY=",
             "email": "test@example.com",
             "active": false
         }
