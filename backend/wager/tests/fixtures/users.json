@@ -1,0 +1,12 @@
+[
+    {
+        "model": "api.user",
+        "pk": 1,
+        "fields": {
+            "username": "MrPython",
+            "password": "password1234",
+            "email": "test@example.com",
+            "active": false
+        }
+    }
+]
