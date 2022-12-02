@@ -1,0 +1,4 @@
+*.pyc
+*.cpython-39.pyc
+settings_local.py
+*.sqlite3
