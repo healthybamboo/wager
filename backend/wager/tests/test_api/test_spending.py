@@ -79,11 +79,11 @@ class Test_Spending_Detail_Page:
     
     # ログイン処理
     @staticmethod
-    def login():
+    def login(username:str="MrPython", password:str="password1234"):
         c = client.Client()
         data = {
-            "username": "MrPython",
-            "password":"password1234",
+            "username": username,
+            "password": password,
         }
         token = ast.literal_eval(c.post(path= '/api/user/login/',data=data).content.decode('utf-8'))['token']
         
@@ -98,7 +98,7 @@ class Test_Spending_Detail_Page:
                 call_command('loaddata', 'tests/fixtures/spendings.json')
                 
     # ログインせず収支詳細ページにアクセスした場合、閲覧禁止エラーが返却されることを確認するテスト
-    def test_bad_user_acces_denied(self):
+    def test_unknown_user_acces_denied(self):
         c = client.Client()
         response = c.get(path = self.BASE_PATH+'1/')
 
@@ -115,7 +115,7 @@ class Test_Spending_Detail_Page:
         
         assert response.status_code == 200
         
-    # ログインしている状態で存在しない収支詳細ページにアクセスした場合、404エラーが返却されることを確認するテスト
+    # 存在しない収支詳細ページにアクセスした場合、404エラーが返却されることを確認するテスト
     @pytest.mark.django_db
     def test_correct_user_access_success(self):
         # ログイン
@@ -125,3 +125,16 @@ class Test_Spending_Detail_Page:
         response = c.get(path=self.BASE_PATH + '1000/', HTTP_AUTHORIZATION = 'jwt ' + token)
         
         assert response.status_code == 404
+        
+    # 作成者とは別のユーザーが収支詳細ページにアクセスしようとした場合、403エラーが返却されることを確認するテスト
+    @pytest.mark.django_db
+    def test_bad_user_acces_denied(self):
+        # ログイン
+        token = self.login(username="tkr1234", password="password1234")
+        
+        c = client.Client()
+        response = c.get(path=self.BASE_PATH + '1/', HTTP_AUTHORIZATION = 'jwt ' + token)
+        
+        assert response.status_code == 403
+        
+        

@@ -73,15 +73,20 @@ class SpendingDetail(SpendingBase):
         # リクエストしたユーザーの収支一覧を取得してシリアライズ
         try : 
             spending = Spending.objects.get(id = kwargs['pk'])
-            serializer = SpendingSerializer(spending)
-        
-            # レスポンスを返す
-            return Response(serializer.data,status=200,headers={"ContentTypeHeader":"application/json"})
+            
+            # 収支の詳細が、リクエストしたユーザーのものかを確認
+            if spending.user == request.user:
+                serializer = SpendingSerializer(spending)
+                return Response(serializer.data,status=200,headers={"ContentTypeHeader":"application/json"})
+            
+            # リクエストしたユーザーのものではない場合
+            else:
+                return Response(status=403,headers={"ContentTypeHeader":"application/json"})
         
         # 存在しない収支の詳細を取得しようとした場合
         except Spending.DoesNotExist:
             return Response(status=404,headers={"ContentTypeHeader":"application/json"})
-        
+
         # TODO.例外処理を細かく追加する。
         except Exception as  e:
             return Response(status=500,headers={"ContentTypeHeader":"application/json"})
