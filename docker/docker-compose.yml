@@ -16,16 +16,25 @@ services:
       ports:
         - 3306:3306
       command: mysqld --character-set-server=utf8 --collation-server=utf8_unicode_ci 
-    web:
-      container_name: wager
+    backend:
+      container_name: wager-backend
       build: ./python
       environment:
           DJANGO_SETTINGS_MODULE: wager.settings
       volumes:
-         - ../backend/wager/:/home/wager/
+         - ../backend/:/home/
          - tmp:/run/mysqld
       ports:
          - 8000:8000
+      tty: true
+      stdin_open: true
+    frontend:
+      container_name: wager-frontend
+      build: ./node
+      volumes:
+         - ../frontend/:/usr/src/app/
+      ports:
+         - 3000:3000
       tty: true
       stdin_open: true
 volumes:
