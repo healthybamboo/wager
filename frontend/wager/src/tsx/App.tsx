@@ -4,6 +4,9 @@ import {Routes,Route} from 'react-router-dom';
 // pageのインポート
 import Top from './views/pages/top';
 import Login from './views/pages/login';
+import Signup from './views/pages/signup';
+import Spends from './views/pages/beds';
+
 
 function App() {
   return (
@@ -12,6 +15,8 @@ function App() {
         <Routes>
           <Route path = "/" element = {<Top />} />
           <Route path = "/login" element = {<Login />} />
+          <Route path = "/signup" element = {<Signup />} />
+          <Route path = "/spending" element = {<Spends />} />
         </Routes>
       </div>
   );
