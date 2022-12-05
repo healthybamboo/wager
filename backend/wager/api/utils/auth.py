@@ -32,9 +32,8 @@ class NormalAuthentication(BaseAuthentication):
     def authenticate(self, request):
         
         # リクエストボディからユーザー名とパスワードを取得 
-        username = request._request.POST.get("username")
-        password = request._request.POST.get("password")
-        
+        username = request.data.get("username")
+        password = request.data.get("password")
         
         # ユーザー名が一致するユーザーを取得
         user_obj = User.objects.filter(username=username).first()  
@@ -51,6 +50,7 @@ class NormalAuthentication(BaseAuthentication):
         # tokenを生成して返す
         token = self.generate_jwt(user_obj)
         
+
         return (token,None)
     
 
