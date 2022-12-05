@@ -6,4 +6,5 @@ freezegun
 pytest
 pytest-django
 pytest-mock
-pyjwt 
+pyjwt
+django-cors-headers
