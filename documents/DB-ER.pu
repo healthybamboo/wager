@@ -1,0 +1,63 @@
+@startuml
+' ログインするための情報
+entity "User" as user {
+    *id: int <<PK>>
+    --
+    *name: string
+    *email: string
+    *password: string
+    ' メール認証済みかどうか
+    *is_auth: boolean
+    ' 削除フラグ
+    *is_deleted: boolean
+    *created_at: timestamp
+    *updated_at: timestamp
+}
+
+' 実際の収支データ
+entity "Bed" as bed {
+    *id: int
+    --
+    *user_id: int <<FK>>
+    ' 掛けた金額（初期値０）
+    *spend: int
+    ' 戻ってきた金額（初期値０)
+    *refud : int
+    ' 掛けた日付
+    *date: date
+    *created_at: timestamp
+    *updated_at: timestamp
+
+
+' タグ付け（競馬、競艇とか）
+entity "Tag" as tag {
+    *id: int
+    --
+    *user:int<<FK>>
+    *name: string
+    *created_at: timestamp
+    *updated_at: timestamp
+}
+
+entity "Game" as game{
+    *id: int
+    --
+    *user_id: int <<FK>>
+    ' ゲームの名前（○月△日競馬、地方競馬、競艇とか)
+    *name: string
+    ' モンテカルロ法、ココモ法などの手法
+    *way : string
+    ' 掛ける金額の単位
+    *unit : string 
+    ' ゲームが終了状態かどうか
+    *archive : boolean
+    *created_at: timestamp
+    *updated_at: timestamp
+}
+
+bed }|-- user
+tag |o-- bed
+bed --o| game
+tag }|-- user
+game }|-- user
+@enduml
