@@ -1,0 +1,28 @@
+[
+    {
+        "model": "api.bed",
+        "pk": 1,
+        "fields": {
+            "user": 1,
+            "date": "2022-09-23",
+            "spend": 100,
+            "refund":0,
+            "memo": "これはテスト2",
+            "updated_at" : "2019-01-01T00:00:00Z",
+            "created_at" : "2019-01-01T00:00:00Z"
+        }
+    },
+    {
+        "model": "api.bed",
+        "pk": 2,
+        "fields": {
+            "user": 1,
+            "date": "2022-09-24",
+            "spend": 100,
+            "refund":0,
+            "memo": "これはテスト2",
+            "updated_at" : "2019-01-01T00:00:00Z",
+            "created_at" : "2019-01-01T00:00:00Z"
+        }
+    }
+]
