@@ -4,6 +4,7 @@ from api.serializers import UserSerializer
 from api.utils.auth import NormalAuthentication
 import logging
 
+from api.models import User
 logger = logging.getLogger(__name__)
 
 # Create your views here.
@@ -42,12 +43,8 @@ class SignUp(APIView):
 # ユーザー更新処理
 class Update(APIView):
     def put(self,request):
-        # ユーザー情報をシリアライズ
-        serializer = UserSerializer(data=request.data)
-        
-        if serializer.is_valid():
-        
-            return Response(serializer.data, status=201,headers={"ContentTypeHeader":"application/json"})
+        # TODO.　ユーザー情報の更新処理を追加する。
+        return Response(status=404)
         
 # ログイン処理
 class Login(APIView):
