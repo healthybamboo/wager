@@ -28,7 +28,7 @@ class BedSerializer(serializers.Serializer):
     def update(self,validate_date):
         return Bed(**validate_date)
 
-# ゲームを取得するシリアライザ
+# ゲームのシリアライザ
 class GameSerializer(serializers.Serializer):
     id = serializers.IntegerField(read_only=True,required=False)
     name = serializers.CharField(max_length = 100)
