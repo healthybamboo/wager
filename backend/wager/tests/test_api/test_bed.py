@@ -8,7 +8,7 @@ from api.models import Bed
 =================================
 収支詳細ページについてのテスト
 (GET)->IDで指定した収支を取得する,
-TODO.(PUT)->IDで指定した収支を更新する,
+(PUT)->IDで指定した収支を更新する,
 =================================
 '''
 
@@ -82,7 +82,7 @@ class Test_GET_Bed:
 
         assert response.status_code == 403
 
-'''
+
 class Test_PUT_Bed:
     BASE_PATH = '/api/beds/'
 
@@ -106,6 +106,7 @@ class Test_PUT_Bed:
         with django_db_blocker.unblock():
             # # fixturesからデータを読んでDBに入れる
             call_command('loaddata', 'tests/fixtures/users.json')
+            call_command('loaddata', 'tests/fixtures/tags.json')
             call_command('loaddata', 'tests/fixtures/beds.json')
 
     # (PUT)ログインせず収支詳細ページにアクセスした場合、閲覧禁止エラーが返却されることを確認するテスト
@@ -115,17 +116,94 @@ class Test_PUT_Bed:
 
         assert response.status_code == 403
 
-    # (PUT)ログインしている状態で収支詳細ページにアクセスした場合、正常にアクセスできることを確認するテスト
+    # (PUT)払戻しのみを更新した場合、正常に更新できることを確認するテスト
     @pytest.mark.django_db
     def test_correct_user_access_success(self):
         # ログイン
         token = self.login()
 
+        # 更新するデータ
+        DATA = {"refund": 1000}
+
+        before_refund = Bed.objects.get(id=1).refund
+
         c = client.Client()
         response = c.put(path=self.BASE_PATH + '1/',
-                         HTTP_AUTHORIZATION='jwt ' + token)
+                         HTTP_AUTHORIZATION='jwt ' + token,
+                         data=DATA,
+                         content_type='application/json')
 
+        after_refund = Bed.objects.get(id=1).refund
+
+        # 更新ができているかを確認
+        assert before_refund != after_refund and after_refund == 1000
+
+        # ステータスコードの確認
         assert response.status_code == 200
+
+    # (PUT)正しく賭け金のみを更新した場合、正常に更新できることを確認するテスト
+    @pytest.mark.django_db
+    def test_correct_user_access_success(self):
+        # ログイン
+        token = self.login()
+
+        # 更新するデータ
+        DATA = {"spend": 200}
+
+        before_spend = Bed.objects.get(id=1).spend
+
+        c = client.Client()
+        response = c.put(path=self.BASE_PATH + '1/',
+                         HTTP_AUTHORIZATION='jwt ' + token,
+                         data=DATA,
+                         content_type='application/json')
+
+        after_spend = Bed.objects.get(id=1).spend
+
+        # 更新ができているかを確認
+        assert before_spend != after_spend and after_spend == 200
+
+        # ステータスコードの確認
+        assert response.status_code == 200
+
+    # (PUT)全体を更新した場合、正常に更新できることを確認するテスト
+    @pytest.mark.django_db
+    def test_correct_user_access_success(self):
+        # ログイン
+        token = self.login()
+
+        # 更新するデータ
+        DATA = {
+            "name": "更新テストxyz",
+            "tag": 1,
+            "date": "1998-01-01",
+            "spend": 1000,
+            "refund": 2500,
+            "memo": "更新テストメモ"
+        }
+        
+        # 想定されるデータ
+        EXPECTED = {
+            "id":1,
+            **DATA
+        }
+
+        before = Bed.objects.filter(id=1).first()
+
+        c = client.Client()
+        response = c.put(path=self.BASE_PATH + '1/',
+                         HTTP_AUTHORIZATION='jwt ' + token,
+                         data=DATA,
+                         content_type='application/json')
+
+        after = Bed.objects.filter(id=1).first()
+
+        # ステータスコードの確認
+        assert response.status_code == 200
+        
+        # 更新ができているかを確認
+        assert response.data == EXPECTED
+
 
     # (PUT)存在しない収支詳細ページにアクセスした場合、404エラーが返却されることを確認するテスト
     @pytest.mark.django_db
@@ -150,4 +228,3 @@ class Test_PUT_Bed:
                          HTTP_AUTHORIZATION='jwt ' + token)
 
         assert response.status_code == 403
-'''
