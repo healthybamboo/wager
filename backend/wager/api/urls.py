@@ -18,7 +18,6 @@ urlpatterns = [
 
     # ゲーム
     path('games/',game_view.GameList.as_view()),
-    path('games/create/',game_view.GameCreate.as_view()),
     path('games/<int:pk>/',game_view.GameDetail.as_view()),
 ] 
     

@@ -34,10 +34,8 @@ class GameList(GameBase):
         # 正常な値を返す
         return Response(status=200,data=json.dumps(serializer.data) ,headers={"ContentTypeHeader":"application/json"})
     
-# ゲームの作成を行う
-class GameCreate(GameBase):
-    def post(self,request, *args, **kwargs):
-        # 接続ユーザーの取得
+    def post(self,request,*args,**kwargs):
+         # 接続ユーザーの取得
         user = request.user
         
         # ゲームオブジェクトを作成
