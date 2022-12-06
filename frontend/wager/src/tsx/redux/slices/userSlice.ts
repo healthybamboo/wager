@@ -12,17 +12,12 @@ const initialState: User = {
     status: ''
 }
 
-// axios.defaults.withCredentials = true; // global に設定してしまう場合
-
 export const loginAsync = createAsyncThunk(
     'user/login',
     async (user: LoginForm, { rejectWithValue }) => {
         const config = {
             headers: {
                 "Content-Type": "application/json",
-                // "Content-Type": "plain/text",
-                // "Access-Control-Allow-Origin": "http://localhost:9000",
-                // 'X-CSRFToken': "EpOlXGMo2trFE6ki5gdeZwaEQWM4swHBEF6dvMdzbF4hdeubdeNEbeeuEOweI9t"
             }
         }
         try {
