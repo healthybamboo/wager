@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from api.models import User,Bed
+from api.models import User,Bed,BedWay ,Game
 
 
 # ユーザー情報のシリアライザー
@@ -11,13 +11,8 @@ class UserSerializer(serializers.Serializer):
     # ユーザー情報を登録するためのシリアライザ
     def create(self,validate_date):
         return User(**validate_date)
-    
-    # ユーザー情報を更新するためのシリアライザ
-    def update(self,validate_date):
-        return User(**validate_date)
         
-        
-# 掛け金のシリアライザー
+# 掛け金シリアライザー
 class BedSerializer(serializers.Serializer):
     id = serializers.IntegerField(read_only=True,required=False)
     date = serializers.DateField()
@@ -33,6 +28,15 @@ class BedSerializer(serializers.Serializer):
     def update(self,validate_date):
         return Bed(**validate_date)
 
-
-        
+# ゲームを取得するシリアライザ
+class GameSerializer(serializers.Serializer):
+    id = serializers.IntegerField(read_only=True,required=False)
+    name = serializers.CharField(max_length = 100)
+    way = serializers.PrimaryKeyRelatedField(queryset=BedWay.objects.all())
+    unit = serializers.IntegerField()
+    state = serializers.JSONField(required = False)
+    archive = serializers.BooleanField(default=False,required=False)
     
+    # ゲームを登録するための関数
+    def create(self,validate_date):
+        return Game(**validate_date)
