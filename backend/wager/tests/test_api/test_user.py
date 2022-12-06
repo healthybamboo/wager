@@ -54,11 +54,10 @@ class Test_UpdateUser:
                 call_command('loaddata', 'tests/fixtures/users.json')
                 
     # ユーザー情報の更新が正常に行われることを確認するテスト
-    @pytest.mark.skip(reason="low priority")
+    @pytest.mark.skip
     @pytest.mark.django_db
     def test_update_user_info(self):
         data = {
-            "username": "MrPython",
             "email":"test@example.com",
             "password": "password1234", 
         }
@@ -67,7 +66,7 @@ class Test_UpdateUser:
         
         response = c.put(self.PATH, data=data, content_type='application/json')
        
-        assert response.status_code == 201
+        assert response.status_code == 200
         
     # TODO.ユーザー情報の更新が失敗することを確認するテスト
         

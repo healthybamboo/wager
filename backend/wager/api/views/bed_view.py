@@ -5,9 +5,8 @@ from rest_framework.permissions import IsAuthenticated
 
 from api.utils.auth import JWTAuthentication
 
-from api.models import Bed,User
+from api.models import Bed
 from api.serializers import BedSerializer
-import json
 
 import logging
 

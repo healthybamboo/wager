@@ -10,7 +10,7 @@ from api.models import Bed
 
 #  収支一覧ページのテスト
 class Test_Bed_List_Page:
-    PATH = '/api/bedlist/'
+    PATH = '/api/beds/'
     
     # ログイン処理
     @staticmethod
@@ -76,7 +76,7 @@ class Test_Bed_List_Page:
         
 # 収支詳細ページのテスト
 class Test_Bed_Detail_Page:
-    BASE_PATH = '/api/bed/'
+    BASE_PATH = '/api/beds/'
     
     # ログイン処理
     @staticmethod
