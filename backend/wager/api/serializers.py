@@ -40,3 +40,12 @@ class GameSerializer(serializers.Serializer):
     # ゲームを登録するための関数
     def create(self,validate_date):
         return Game(**validate_date)
+    
+    # ゲーム情報を更新するための関数
+    def update(self, instance, validated_data):
+        instance.name = validated_data.get('name', instance.name)
+        instance.way = validated_data.get('way', instance.way)
+        instance.unit = validated_data.get('unit', instance.unit)
+        instance.state = validated_data.get('state', instance.state)
+        instance.archive = validated_data.get('archive', instance.archive)
+        return instance
