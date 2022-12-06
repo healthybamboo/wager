@@ -50,7 +50,7 @@ class Test_GET_Bed_List_Page:
         c = client.Client()
         token = self.login()
         # トークンをヘッダーにセットして収支一覧ページにアクセス
-        response = c.get(path=self.PATH, HTTP_AUTHORIZATION='jwt ' + token)
+        response = c.get(self.PATH, {"year":2022,"month":12,"day":6 },HTTP_AUTHORIZATION='jwt ' + token)
 
         assert response.status_code == 200
 

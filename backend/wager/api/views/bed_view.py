@@ -7,6 +7,7 @@ from api.utils.auth import JWTAuthentication
 from api.models import Bed
 from api.serializers import BedSerializer
 
+from datetime import datetime
 import logging
 
 logger = logging.getLogger(__name__)
@@ -29,14 +30,28 @@ class BedBase(APIView):
 class BedList(BedBase):
 
     def get(self, request, *args, **kwargs):
-        # リクエストしたユーザーの収支一覧を取得してシリアライズ
-        beds = Bed.objects.filter(user=request.user)
-        serializer = BedSerializer(beds, many=True)
+        try:
+            # リクエストしたユーザーの収支一覧を取得してシリアライズ
+            date = datetime(int(request.query_params.get('year')),
+                            int(request.query_params.get('month')),
+                            int(request.query_params.get('day')))
+            
+            # 収支一覧を取得
+            beds = Bed.objects.filter(user=request.user, date=date)
+            
+            # 収支一覧をシリアライズ
+            serializer = BedSerializer(beds, many=True)
 
-        # レスポンスを返す
-        return Response(serializer.data,
-                        status=200,
-                        headers={"ContentTypeHeader": "application/json"})
+            # レスポンスを返す
+            return Response(serializer.data,
+                            status=200,
+                            headers={"ContentTypeHeader": "application/json"})
+        except ValueError :
+            return Response(status=400,data={"error":"bad query"},headers={"ContentTypeHeader": "application/json"})
+        except Exception as e:
+            logger.debug(msg=str(e))
+            return Response(status=500,
+                            headers={"ContentTypeHeader": "application/json"})
 
     # リクエストデータをシリアライズ
     def post(self, request, *args, **kwargs):
@@ -118,11 +133,11 @@ class BedDetail(BedBase):
             bed = Bed.objects.get(id=kwargs['pk'])
 
             if request.user == bed.user:
-                
+
                 serializer = BedSerializer(bed,
                                            data=request.data,
                                            partial=True)
-                
+
                 # リクエスの情報のバリデーション
                 if serializer.is_valid():
 
