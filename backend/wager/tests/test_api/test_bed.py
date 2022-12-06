@@ -118,7 +118,7 @@ class Test_Bed_Detail_Page:
         
     # 存在しない収支詳細ページにアクセスした場合、404エラーが返却されることを確認するテスト
     @pytest.mark.django_db
-    def test_correct_user_access_success(self):
+    def test_access_not_exist_bed(self):
         # ログイン
         token = self.login()
         
