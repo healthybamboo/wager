@@ -54,7 +54,32 @@ class Test_GET_Bed_List_Page:
 
         assert response.status_code == 200
 
-    # (GET)収支一覧ページにアクセスした場合、
+
+class Test_POST_Bed_List_Page:
+    PATH = '/api/beds/'
+
+    # ログイン処理
+    @staticmethod
+    def login():
+        c = client.Client()
+        data = {
+            "username": "MrPython",
+            "password": "password1234",
+        }
+        token = ast.literal_eval(
+            c.post(path='/api/user/login/',
+                   data=data).content.decode('utf-8'))['token']
+
+        return token
+
+    # データの登録
+    @pytest.fixture(autouse=True, scope='class')
+    def setUp(self, django_db_setup, django_db_blocker):
+        with django_db_blocker.unblock():
+            # # fixturesからデータを読んでDBに入れる
+            call_command('loaddata', 'tests/fixtures/users.json')
+
+    # (POST)収支一覧ページで追加した場合、正常に追加できることを確認するテスト
     @pytest.mark.django_db
     def test_add_bed_success(self):
         token = self.login()
