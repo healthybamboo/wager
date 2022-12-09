@@ -1,5 +1,5 @@
 from django.urls import path,include
-from api.views import user_view,bed_view,game_view
+from api.views import user_view,bed_view,game_view,csrf_view
 from rest_framework import routers
 
 
@@ -7,6 +7,9 @@ app_name = 'api'
 
 
 urlpatterns = [
+    # セキュリティ
+    path('csrf/',csrf_view.csrf_view),
+    
     # ユーザー
     path('user/signup/',user_view.SignUp.as_view()),
     path('user/login/',user_view.Login.as_view()),
