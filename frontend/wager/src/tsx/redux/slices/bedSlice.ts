@@ -1,27 +1,29 @@
-import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit';
+import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import { RootState } from '../store';
-import axios, { AxiosRequestConfig } from 'axios';
+import axios from 'axios';
 
 
-import {User,TBed,LoginForm} from '../../utils/types';
+import { TBed, TAuthedGetRequest } from '../../utils/types';
 
 
-// const initialState: User = 
-// }
 
-// axios.defaults.withCredentials = true; // global に設定してしまう場合
+export const getBedAsync = createAsyncThunk(
+    'bed/get',
+    async (request: TAuthedGetRequest, { rejectWithValue }) => {
 
-export const fetchBedAsync = createAsyncThunk(
-    'bed/pull',
-    async (user: User, { rejectWithValue }) => {
         const config = {
             headers: {
-                "Authorization": "jwt " + user.token,
+                "Authorization": "jwt " + request.token,
                 "Content-Type": "application/json",
+            },
+            params: {
+                "year": request.year,
+                "month": request.month,
+                "day": request.day,
             }
         }
         try {
-            const result = await axios.get('/api/bedlist/',config);
+            const result = await axios.get('/api/beds/', config);
             return result.data;
         } catch (error: any) {
             if (!error.response) {
@@ -33,29 +35,88 @@ export const fetchBedAsync = createAsyncThunk(
     },
 );
 
-const initialState : TBed[] = [];
-export const spendSlice = createSlice({
+export const postBedAsync = createAsyncThunk(
+    'bed/post',
+    async (request: TAuthedGetRequest, { rejectWithValue }) => {
+
+        const config = {
+            headers: {
+                "Authorization": "jwt " + request.token,
+                "Content-Type": "application/json",
+            },
+            params: {
+                "year": request.year,
+                "month": request.month,
+                "day": request.day,
+            }
+        }
+        try {
+            const result = await axios.post('/api/beds/', config);
+            return result.data;
+        } catch (error: any) {
+            if (!error.response) {
+                throw error;
+            }
+            return rejectWithValue(error.response.data);
+        } finally {
+        }
+    },
+);
+
+
+
+
+
+type TBeds = {
+    status: string,
+    beds: TBed[]
+}
+
+const initialState: TBeds = {
+    status: "",
+    beds: []
+};
+export const bedSlice = createSlice({
     name: 'bed',
     initialState,
     reducers: {
     },
     extraReducers: (builder) => {
         builder
-            .addCase(fetchBedAsync.fulfilled, (state, action) => {
-                // state.status = 'success';
+            // 取得処理が成功した場合
+            .addCase(getBedAsync.fulfilled, (state, action) => {
+
+                state.beds = action.payload.concat()
+                state.status = 'success';
             })
-            .addCase(fetchBedAsync.pending, (state, action) => {
-                // state.status = 'loading';
+            // 取得処理中の場合
+            .addCase(getBedAsync.pending, (state, action) => {
+                state.status = 'loading';
             })
-            .addCase(fetchBedAsync.rejected, (state, action) => {
-                // state.status = 'rejected';
+            // 取得処理が失敗した場合
+            .addCase(getBedAsync.rejected, (state, action) => {
+                state.status = 'rejected';
             })
+            // 追加処理が成功した場合
+            .addCase(postBedAsync.fulfilled, (state, action) => {
+                state.beds.push(action.payload)
+                state.status = 'success';
+            })
+            // 追加処理中の場合
+            .addCase(postBedAsync.pending, (state, action) => {
+                state.status = 'loading';
+            })
+            // 追加処理が失敗した場合
+            .addCase(postBedAsync.rejected, (state, action) => {
+                state.status = 'rejected';
+            })
+
     },
 });
 
-// export const selectUserName = (state: RootState) => state.user.name;
-// export const selectPassword = (state: RootState) => state.user.token;
-// export const selectToken = (state: RootState) => state.user.token;
-// export const selectLoginStatus = (state: RootState) => state.user.status;
+// 
+export const selectStatus = (state: RootState) => state.bed.status;
+export const selectBeds = (state: RootState) => state.bed.beds;
 
-export default spendSlice.reducer;
+
+export default bedSlice.reducer;

@@ -1,38 +1,115 @@
-import React from "react";
+import React, { useState } from "react";
+import BedList from '../components/bed/bedlist';
+import BasicModal from "../components/bed/addmodal";
+import BedHeader from "../components/bed/bedheader";
+import BedSum from '../components/bed/bedsum';
 
-import { TBed } from "../../utils/types";
+import { Card, Grid, TextField, Button, Typography } from '@mui/material'
 
-import BedCard  from '../components/bed_card';
-import BasicModal  from "../components/modal";
+import { createTheme, ThemeProvider } from '@mui/material/styles';
+import { CssBaseline, Container, Box } from '@mui/material';
 
+import { useAppDispatch, useAppSelector } from '../../redux/hooks';
 
+import { getBedAsync } from "../../redux/slices/bedSlice";
+import {  TBed, TAuthedGetRequest } from "../../utils/types";
+
+import { useForm } from 'react-hook-form'
+
+import { selectToken } from "../../redux/slices/userSlice";
+import { selectStatus, selectBeds } from "../../redux/slices/bedSlice";
+
+/*
+日付、
+タグ、
+ワードなどで検索して、データを絞ることができる。
+その中でのデータ数を表示する。
+TODO.ページネーションを追加する。
+*/
+
+const theme = createTheme();
 const Beds = () => {
-    const bed1 : TBed = {
-        id: 1,
-        name: "お小遣い",
-        amount: 1000,
-        date: "2021-10-01",
-        category: "食費",
-        memo: "おにぎり",
+    const dispatch = useAppDispatch();
+
+    const { register, handleSubmit } = useForm<TBed>();
+
+
+    const [date, setDate] = useState("");
+
+    const token = useAppSelector(selectToken);
+    const status = useAppSelector(selectStatus);
+    const beds = useAppSelector(selectBeds);
+
+    const onSubmit = (data: any) => {
+        const date = new Date(data.date);
+        const year = date.getFullYear();
+        const month = date.getMonth() + 1;
+        const day = date.getDate();
+        setDate(year.toString() + "/" + month.toString() + "/" + day.toString());
+
+        const request: TAuthedGetRequest = {
+            token: token as string,
+            year: year,
+            month: month,
+            day: day,
+        }
+
+        dispatch(getBedAsync(request));
+        console.log(beds);
     }
-    const bed2 : TBed ={
-        id: 2,
-        name: "中山競馬第２",
-        amount: -1200,
-        date: "2021-10-02",
-        category: "交通費",
-        memo: "電車",
+
+    const [open, setOpen] = React.useState(false);
+    const handleOpen = () => setOpen(true);
+    const handleClose = () => setOpen(false);
+
+    let sum = 0;
+    for (let i = 0; i < beds.length; i++) {
+        sum += (-beds[i].spend + beds[i].refund);
     }
-    const spends = [ 
-        bed1,
-        bed2,
-    ]
-    
+
     return (
-        <React.Fragment>
-            {spends.map((spend : TBed) => {return (<BedCard{...spend}/>)})}
-            <BasicModal  />
-        </React.Fragment>
+        <ThemeProvider theme={theme}>
+            <Container component="main" maxWidth="xs">
+                <CssBaseline />
+
+                <Box
+                    sx={{
+                        marginTop: 8,
+                        display: 'flex',
+                        flexDirection: 'column',
+                        alignItems: 'center',
+                    }}
+                >
+
+                    <TextField
+                        id="name"
+                        label="日付"
+                        type="date"
+                        sx={{ width: 220 }}
+                        InputLabelProps={{
+                            shrink: true,
+                        }}
+                        {...register('date')}
+
+                    />
+                    <Button onClick={handleSubmit(onSubmit)} color={"inherit"} sx={{ bgcolor: "#DDD", mt: 3 }} >検索</Button>
+                    {
+                        status ==="rejected" ? <Typography color="error">取得に失敗しました。</Typography> : null
+                    }
+                    <Grid >
+                        <Card sx={{ m: 5, p: 2 }}>
+                            <BedHeader date={date} handleOpen={handleOpen} />
+                            {
+                                beds.length > 0 ? <BedSum sum={sum} /> : null
+
+                            }
+                            <BedList beds={beds} />
+                            <BasicModal open={open} handleClose={handleClose} />
+                        </Card>
+                    </Grid>
+                </Box>
+            </Container>
+        </ThemeProvider>
     )
 }
 

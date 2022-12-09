@@ -1,12 +1,16 @@
 import { configureStore, ThunkAction, Action } from '@reduxjs/toolkit';
 import userReducer from './slices/userSlice';
-import spendReducer from './slices/bedSlice';
+import bedReducer from './slices/bedSlice';
+import gameReducer from './slices/gameSlice'
 
 export const store = configureStore({
   reducer: {
-    // createAsyncThunkのReducer
+    // ユーザー関連の状態管理
     user: userReducer,
-    spend : spendReducer,
+    // 収支記録の状態管理
+    bed : bedReducer,
+    // ゲームの状態管理
+    game : gameReducer,
   },
 });
 

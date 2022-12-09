@@ -1,14 +1,17 @@
 import React from "react";
 import { redirect,Navigate} from "react-router-dom";
 
-import { loginAsync, selectUserName, selectPassword, selectToken, selectLoginStatus } from '../../redux/slices/userSlice'
+import {Container, CssBaseline} from "@mui/material";
 
 const Top = () => {
     
     return (
-        <div>
-            <h1>Top</h1>
-        </div>
+        <Container component="main" maxWidth="xs">
+            <CssBaseline />
+                <div>
+                    <h1>Top</h1>
+                </div>
+        </Container>
     )
 }
 

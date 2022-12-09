@@ -3,20 +3,21 @@ import {Routes,Route} from 'react-router-dom';
 
 // pageのインポート
 import Top from './views/pages/top';
-import Login from './views/pages/login';
+import SignIn from './views/pages/signin';
 import Signup from './views/pages/signup';
-import Spends from './views/pages/beds';
-
+import Beds from './views/pages/beds';
+import ButtonAppBar from './views/components/header/header'
 
 function App() {
   return (
       <div className = "App">
-        <h1>App</h1>
+        <ButtonAppBar />
         <Routes>
           <Route path = "/" element = {<Top />} />
-          <Route path = "/login" element = {<Login />} />
+          <Route path = "/signin" element = {<SignIn />} />
           <Route path = "/signup" element = {<Signup />} />
-          <Route path = "/spending" element = {<Spends />} />
+          <Route path = "/bed" element = {<Beds />} />
+          <Route path = "*" element = {<h1>404</h1>} />
         </Routes>
       </div>
   );

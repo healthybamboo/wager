@@ -2,19 +2,20 @@ import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { RootState } from '../store';
 import axios, { AxiosRequestConfig } from 'axios';
 
-import {User,LoginForm} from '../../utils/types';
+import {TUser,TSignupForm,TSigninForm} from '../../utils/types';
 
 // stateの初期値
-const initialState: User = {
+const initialState: TUser = {
     id: null,
     name: null,
     token: null,
     status: ''
 }
 
-export const loginAsync = createAsyncThunk(
-    'user/login',
-    async (user: LoginForm, { rejectWithValue }) => {
+// ログイン用の非同期処理
+export const signinAsync = createAsyncThunk(
+    'user/signin',
+    async (user: TSigninForm, { rejectWithValue }) => {
         const config = {
             headers: {
                 "Content-Type": "application/json",
@@ -25,7 +26,6 @@ export const loginAsync = createAsyncThunk(
                 "username": user.username, "password": user.password
             },
             );
-
             return result.data;
         } catch (error: any) {
             if (!error.response) {
@@ -37,6 +37,34 @@ export const loginAsync = createAsyncThunk(
     },
 );
 
+//　アカウント作成用の非同期処理
+export const signupAsync = createAsyncThunk(
+    'user/signup',
+    async (user: TSignupForm, { rejectWithValue }) => {
+        const config = {
+            headers: {
+                "Content-Type": "application/json",
+                // CSRF　TOKENの取得処理
+                "X-CSRFToken": "csrftoken"
+            }
+        }
+        try {
+            const result = await axios.post('/api/user/signup/', {
+                "username": user.username, "password": user.password, "email": user.email
+            },
+            );
+            return result.data;
+        } catch (error: any) {
+            if (!error.response) {
+                throw error;
+            }
+            return rejectWithValue(error.response.data);
+        } finally {
+        }
+    },
+);
+
+// ユーザー情報のstateを管理する
 export const userSlice = createSlice({
     name: 'user',
     initialState,
@@ -44,16 +72,29 @@ export const userSlice = createSlice({
     },
     extraReducers: (builder) => {
         builder
-            .addCase(loginAsync.fulfilled, (state, action) => {
+            .addCase(signinAsync.fulfilled, (state, action) => {
                 state.id = action.payload.id;
                 state.name = action.payload.name;
                 state.token =  action.payload.token;
                 state.status = 'success';
             })
-            .addCase(loginAsync.pending, (state, action) => {
+            .addCase(signinAsync.pending, (state, action) => {
                 state.status = 'loading';
             })
-            .addCase(loginAsync.rejected, (state, action) => {
+            .addCase(signinAsync.rejected, (state, action) => {
+                state.status = 'rejected';
+            })
+        builder
+            .addCase(signupAsync.fulfilled, (state, action) => {
+                state.id = action.payload.id;
+                state.name = action.payload.name;
+                state.token =  action.payload.token;
+                state.status = 'success';
+            })
+            .addCase(signupAsync.pending, (state, action) => {
+                state.status = 'loading';
+            })
+            .addCase(signupAsync.rejected, (state, action) => {
                 state.status = 'rejected';
             })
     },
@@ -62,6 +103,6 @@ export const userSlice = createSlice({
 export const selectUserName = (state: RootState) => state.user.name;
 export const selectPassword = (state: RootState) => state.user.token;
 export const selectToken = (state: RootState) => state.user.token;
-export const selectLoginStatus = (state: RootState) => state.user.status;
+export const selectUserStatus = (state: RootState) => state.user.status;
 
 export default userSlice.reducer;

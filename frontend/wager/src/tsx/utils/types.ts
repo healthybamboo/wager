@@ -1,30 +1,43 @@
-
-export type TUser = {
-    id: number;
-    name: string;
-    email: string;
-    last_login: string;
-    token: string;
-}
-
-export type LoginForm = {
+export type TSigninForm = {
     username: string;
     password: string;
 }
 
+export type TSignupForm = {
+    username: string;
+    password: string;
+    email: string;
+}
 
-export type User = {
+export type TUser = {
     id: number | null;
     name: string | null;
     token: string | null;
-    status : string | null;
+    status: string | null;
 }
 
 export type TBed = {
-    id : number;
-    amount : number;
-    name : string;
-    date : string;
-    category : string;
-    memo : string;
+    id: number,
+    name: string
+    tag:number
+    date: string
+    spend: number
+    refund: number
+    memo: string
+}
+
+export type TGame = {
+    name: string;
+    way: number;
+    unit: number;
+    state: string;
+    archive: boolean;
+}
+
+
+export type TAuthedGetRequest = {
+    token: string;
+    year: number;
+    month: number;
+    day: number;
 }
