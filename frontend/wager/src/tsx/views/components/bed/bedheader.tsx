@@ -8,7 +8,7 @@ import {
 import AddIcon from '@mui/icons-material/Add';
 
 
-const BedHeader = (props: { date:string, handleOpen: () => void }) => {
+const BedHeader = (props: { date:string | null , handleOpen: () => void }) => {
     const date = props.date
     return (
         <Box sx={{ display: 'flex', alignItems: 'center', mb: 3 ,minWidth:500}}>

@@ -13,6 +13,10 @@ import {
 import { useForm, SubmitHandler } from "react-hook-form";
 import { Stack } from '@mui/system';
 
+import { TBedForm } from '../../../../utils/types';
+
+import { postBedAsync } from '../../../../redux/slices/bedSlice';
+import { useAppDispatch, useAppSelector } from '../../../../redux/hooks';
 
 const style = {
     position: 'absolute' as 'absolute',
@@ -28,6 +32,23 @@ const style = {
 
 
 export default function BasicModal(props: { open: boolean, handleClose: () => void }) {
+    const dispatch = useAppDispatch();
+    const { register, handleSubmit } = useForm<TBedForm>();
+
+    const onSubmit = (data: any) => {
+        console.log("SUBMIT");
+        props.handleClose();
+        const request: TBedForm = {
+            date: data.date,
+            name: data.name,
+            spend: data.spend,
+            refund: data.refund,
+            memo: data.memo,
+        }
+
+        dispatch(postBedAsync(request));
+    }
+
     return (
         <div>
             <Modal
@@ -41,17 +62,29 @@ export default function BasicModal(props: { open: boolean, handleClose: () => vo
                             <Button onClick={() => props.handleClose()} >キャンセル</Button>
                         </Grid>
                         <Grid item>
-                            <Button onClick={() => props.handleClose()} >保存</Button>
+                            <Button onClick={handleSubmit(onSubmit)} >保存</Button>
                         </Grid>
                     </Grid>
                     <Stack spacing={2}>
+                        <TextField
+                            id="date"
+                            label="日付"
+                            type="date"
+                            sx={{ width: 220 }}
+                            InputLabelProps={{
+                                shrink: true,
+                            }}
+                            {...register('date')}
+                        />
                         <TextField
                             id="name"
                             label="名前"
                             type="text"
                             InputLabelProps={{
                                 shrink: true,
-                            }} />
+                            }}
+                            {...register('name')}
+                        />
 
                         <TextField
                             id="spend"
@@ -61,6 +94,12 @@ export default function BasicModal(props: { open: boolean, handleClose: () => vo
                             InputLabelProps={{
                                 shrink: true,
                             }}
+                            {...register('spend', {
+                                required: {
+                                    value: true,
+                                    message: '入力が必須の項目です。',
+                                }
+                            })}
                         > </TextField>
                         <TextField
                             id="spend"
@@ -70,16 +109,10 @@ export default function BasicModal(props: { open: boolean, handleClose: () => vo
                             InputLabelProps={{
                                 shrink: true,
                             }}
+                            required
+                            {...register('refund')}
                         > </TextField>
-                        <TextField
-                            id="date"
-                            label="日付"
-                            type="date"
-                            sx={{ width: 220 }}
-                            InputLabelProps={{
-                                shrink: true,
-                            }}
-                        />
+
                         <TextField
                             id="memo"
                             label="メモ"
@@ -89,6 +122,7 @@ export default function BasicModal(props: { open: boolean, handleClose: () => vo
                             InputLabelProps={{
                                 shrink: true,
                             }}
+                            {...register('memo')}
 
                         />
                     </Stack>

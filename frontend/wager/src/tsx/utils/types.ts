@@ -35,9 +35,16 @@ export type TGame = {
 }
 
 
-export type TAuthedGetRequest = {
-    token: string;
+export type TGetRequest = {
     year: number;
     month: number;
     day: number;
+}
+
+export type TBedForm ={
+    date : string;
+    name : string;
+    spend : number;
+    refund : number;
+    memo : string;
 }
