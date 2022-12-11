@@ -7,15 +7,18 @@ import {
 } from '@mui/material';
 import AddIcon from '@mui/icons-material/Add';
 
-
+// 収支カードのヘッダ部分
 const BedHeader = (props: { date:string | null , handleOpen: () => void }) => {
+    // 親コンポーネントから日付データを受け取る。
     const date = props.date
+    
     return (
         <Box sx={{ display: 'flex', alignItems: 'center', mb: 3 ,minWidth:500}}>
+            {/* 表示対象になっている日付を */}
             <Typography variant="h5" component="h1" sx={{ mb: 3, flexGrow: 1 }}>
                 {date}
             </Typography>
-
+            {/* 収支を追加するためのモーダルを開くボタン */}
             <Box sx={{ '& > :not(style)': { m: 1 } }}>
                 <Fab color="inherit" aria-label="add" onClick={() => props.handleOpen()}>
                     <AddIcon />

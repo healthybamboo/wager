@@ -19,18 +19,15 @@ import { TBed } from "../../../utils/types";
 import React from "react";
 import { maxWidth } from "@mui/system";
 
-
-// import AddButton from "./addbutton"
-
+// 収支の一覧
 type BedListProps = {
     beds: TBed[]
 }
 
 const BedList = (props:BedListProps) => {
-
-    const date = "2021年10月01"
     return (
             <Stack sx={{ maxWidth: 500 }}>
+                {/* 親子ポーネンとから収支の一覧を取得して、すべて取り出して表示する */}
                 {props.beds.map((bed: TBed) => { return (<BedRow{...bed} />) })}
             </Stack>
     )

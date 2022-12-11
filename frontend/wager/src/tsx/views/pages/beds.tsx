@@ -34,16 +34,21 @@ const theme = createTheme();
 const Beds = () => {
     const dispatch = useAppDispatch();
 
+    // 日付を入力するためのフォーム
     const { register, handleSubmit } = useForm<TBed>();
 
-
+    // 日付を設定するためのステータス
     const [date, setDate] = useState(localStorage.getItem('date'));
 
     const token = useAppSelector(selectToken);
+    
+    // 収支の取得状況のステータス
     const status = useAppSelector(selectStatus);
+
+    // 収支一覧
     const beds = useAppSelector(selectBeds);
 
-    /* ページが読み込まれた時に一回だけ処理される */
+    // ページが読み込まれた時に一回だけ処理される 
     useEffect(() => {
         const item = localStorage.getItem('date');
         if (item !== null) {
@@ -63,7 +68,7 @@ const Beds = () => {
         console.log("ロードページ");
     }, []);
 
-    /* 送信された時の処理 */
+    // 検索ボタンがクリックされた場合の処理
     const onSubmit = (data: any) => {
         const date = new Date(data.date);
         localStorage.setItem('date', data.date);
@@ -82,12 +87,17 @@ const Beds = () => {
         console.log(beds);
     }
 
+    // モーダルが開いているかどうかのステータス
     const [open, setOpen] = React.useState(false);
+    // モーダルが開く時のイベントハンドラー
     const handleOpen = () => setOpen(true);
+    // モーダルを閉じた時のイベントハンドラー
     const handleClose = () => setOpen(false);
 
+    // 収支の合計値を計算
     let sum = 0;
     for (let i = 0; i < beds.length; i++) {
+        // spendの値は、プラスならば収支上はマイナスである
         sum += (-beds[i].spend + beds[i].refund);
     }
 
@@ -104,7 +114,7 @@ const Beds = () => {
                         alignItems: 'center',
                     }}
                 >
-
+                    {/* 日付を選択するためのフィールド */}
                     <TextField
                         id="name"
                         label="日付"
@@ -117,18 +127,22 @@ const Beds = () => {
                         {...register('date')}
 
                     />
+                    {/* フォームで詮索した日付の収支を取得するボタン */}
                     <Button onClick={handleSubmit(onSubmit)} color={"inherit"} sx={{ bgcolor: "#DDD", mt: 3 }} >検索</Button>
                     {
                         status === "rejected" ? <Typography color="error">取得に失敗しました。</Typography> : null
                     }
                     <Grid >
                         <Card sx={{ m: 5, p: 2 }}>
+                            {/* 収支一覧のヘッダ部分 */}
                             <BedHeader date={date} handleOpen={handleOpen} />
                             {
                                 beds.length > 0 ? <BedSum sum={sum} /> : null
 
                             }
+                            {/* 収支一覧 */}
                             <BedList beds={beds} />
+                            {/* 収支を登録するためのモーダル */}
                             <BasicModal open={open} handleClose={handleClose} />
                         </Card>
                     </Grid>

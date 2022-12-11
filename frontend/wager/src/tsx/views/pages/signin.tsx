@@ -21,17 +21,19 @@ import { useAppDispatch, useAppSelector } from '../../redux/hooks';
 import { TSigninForm,TSignupForm } from '../../utils/types';
 
 const theme = createTheme();
-
+// ログインにページ
 export default function SignIn() {
+  
   const dispatch = useAppDispatch();
 
   const { register, handleSubmit, reset } = useForm<TSigninForm>();
-
+  
+  // ログイン状況
   const status = useAppSelector(selectUserStatus);
 
   const token = useAppSelector(selectToken);
 
-
+  // ログインボタンが押された場合の処理
   const onSubmit = (data: any) => {
     dispatch(signinAsync(data));
   }
@@ -55,10 +57,12 @@ export default function SignIn() {
             ログイン
           </Typography>
           {
+            // ユーザーにエラーを表示する
             status === 'rejected' ? <Typography component="p" variant="inherit" color="error">ログインに失敗しました</Typography> :
             status === 'success' ?  <Navigate to="/bed" /> : null
           }
           <Box component="form" noValidate sx={{ mt: 1, mb: 5 }}>
+            {/* ユーザー名を入力するフィールド　*/}
             <TextField
               margin="normal"
               required
@@ -69,6 +73,8 @@ export default function SignIn() {
               autoFocus
               {...register("username")}
             />
+
+            {/* パスワードを入力するフィールド */}
             <TextField
               margin="normal"
               required
@@ -79,7 +85,7 @@ export default function SignIn() {
               autoComplete="current-password"
               {...register("password")}
             />
-
+           {/* ログインボタン */}
             <Button
               type="submit"
               fullWidth
@@ -91,9 +97,11 @@ export default function SignIn() {
               ログイン
             </Button>
             <Grid container>
+              {/* TODO. パスワードを忘れたユーザー用のリンクを追加する */}
               <Link href="#" variant="body2">
                 パスワードを忘れましたか？
               </Link>
+              {/*  アカウントを作成アカウント作成用のリンク　*/}
               <Link href="/signup" variant="body2">
                 アカウントをお持ちでない方はこちら
               </Link>

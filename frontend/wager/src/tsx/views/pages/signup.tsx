@@ -25,20 +25,24 @@ import { TSignupForm } from '../../utils/types';
 
 const theme = createTheme();
 
+// アカウント作成ページ
 export default function SignUp() {
   const dispatch = useAppDispatch();
 
+  //  フォームの設定
   const { register, handleSubmit, reset } = useForm<TSignupForm>();
 
+  // ログイン状況
   const status = useAppSelector(selectUserStatus);
 
   const token = useAppSelector(selectToken);
 
-
+  // 入力情報の送信
   const onSubmit = (data: TSignupForm) => {
     console.log(data);
     dispatch(signupAsync(data));
   }
+
   return (
     <ThemeProvider theme={theme}>
       <Container component="main" maxWidth="xs">
@@ -58,12 +62,14 @@ export default function SignUp() {
             アカウントを作成
           </Typography>
           {
+            // アカウントの作成に失敗した場合はエラーを表示し、成功した場合は収支一覧ページにリダイレクト
             status === 'rejected' ? <Typography component="p" variant="inherit" color="error">アカウントの作成に失敗しました</Typography> :
             status === 'success' ?  <Navigate to="/bed" /> : null
           }
           <Box component="form" noValidate sx={{ mt: 3 ,mb:5}}>
             <Grid container spacing={2}>
               <Grid item xs={12}>
+                {/* ユーザー名の入力フィールド */}
                 <TextField
                   required
                   fullWidth
@@ -73,6 +79,7 @@ export default function SignUp() {
                 />
               </Grid>
               <Grid item xs={12}>
+                {/* メールアドレスの入力フィールド */}
                 <TextField
                   required
                   fullWidth
@@ -82,6 +89,7 @@ export default function SignUp() {
                 />
               </Grid>
               <Grid item xs={12}>
+                {/* パスワードの入力フィールド */}
                 <TextField
                   required
                   fullWidth
@@ -92,12 +100,14 @@ export default function SignUp() {
                 />
               </Grid>
               <Grid item xs={12}>
+                {/* 利用規約に同意するかどうか */}
                 <FormControlLabel
                   control={<Checkbox value="allowExtraEmails" color="primary" />}
                   label="利用規約に同意します。"
                 />
               </Grid>
             </Grid>
+            {/* アカウント作成ボタン */}
             <Button
               type="submit"
               fullWidth
@@ -110,6 +120,7 @@ export default function SignUp() {
             </Button>
             <Grid container justifyContent="flex-end">
               <Grid item>
+                {/* ログイン画面へのリンク */}
                 <Link href="/signin" variant="body2">
                   既にアカウントをお持ちの方はこちら
                 </Link>

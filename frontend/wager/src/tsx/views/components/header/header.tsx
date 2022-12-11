@@ -16,6 +16,7 @@ export default function ButtonAppBar() {
           <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
             WAGER
           </Typography>
+          {/* ログイン済みかどうかを判断して、結果によってヘッダに表示するボタンを変える */}
           {
             localStorage.getItem('token') ? <Button color="inherit" href="/" onClick={() => { localStorage.removeItem('token') }}>ログアウト</Button> :
               (
