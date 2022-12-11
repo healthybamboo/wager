@@ -3,17 +3,22 @@ import { RootState } from '../store';
 import axios from 'axios';
 
 
-import { TBed, TAuthedGetRequest } from '../../utils/types';
+import { TBed, TBedForm, TGetRequest } from '../../utils/types';
 
 
 
 export const getBedAsync = createAsyncThunk(
     'bed/get',
-    async (request: TAuthedGetRequest, { rejectWithValue }) => {
-
+    async (request: TGetRequest, { rejectWithValue }) => {
+        const token = localStorage.getItem('token');
+        if (!token) {
+            // TODO.ここにログイン画面へのリダイレクト処理を追加したい
+            console.log('nothing token');
+            return
+        }
         const config = {
             headers: {
-                "Authorization": "jwt " + request.token,
+                "Authorization": "jwt " + token,
                 "Content-Type": "application/json",
             },
             params: {
@@ -37,21 +42,28 @@ export const getBedAsync = createAsyncThunk(
 
 export const postBedAsync = createAsyncThunk(
     'bed/post',
-    async (request: TAuthedGetRequest, { rejectWithValue }) => {
-
-        const config = {
-            headers: {
-                "Authorization": "jwt " + request.token,
-                "Content-Type": "application/json",
-            },
-            params: {
-                "year": request.year,
-                "month": request.month,
-                "day": request.day,
-            }
+    async (form: TBedForm, { rejectWithValue }) => {
+        const token = localStorage.getItem('token');
+        if (!token) {
+            // TODO.ここにログイン画面へのリダイレクト処理を追加したい
+            console.log('nothing token');
+            return
         }
+
+        const headers = {
+            "Authorization": "jwt " + token,
+            "Content-Type": "application/json",
+        }
+        const data = {
+            "date": form.date,
+            "name": form.name,
+            "spend": form.spend,
+            "refund": form.refund,
+            "memo": form.memo,
+        }
+
         try {
-            const result = await axios.post('/api/beds/', config);
+            const result = await axios.post('/api/beds/', data, { headers: headers });
             return result.data;
         } catch (error: any) {
             if (!error.response) {

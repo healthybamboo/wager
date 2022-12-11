@@ -76,6 +76,7 @@ export const userSlice = createSlice({
                 state.id = action.payload.id;
                 state.name = action.payload.name;
                 state.token =  action.payload.token;
+                localStorage.setItem('token',action.payload.token);
                 state.status = 'success';
             })
             .addCase(signinAsync.pending, (state, action) => {
