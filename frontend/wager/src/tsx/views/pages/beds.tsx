@@ -16,11 +16,9 @@ import { TBed, TGetRequest } from "../../utils/types";
 
 import { useForm } from 'react-hook-form'
 
-import { selectToken } from "../../redux/slices/userSlice";
 import { selectStatus, selectBeds } from "../../redux/slices/bedSlice";
 
 import { useEffect } from "react";
-import { request } from "http";
 
 /*
 日付、
@@ -29,9 +27,9 @@ import { request } from "http";
 その中でのデータ数を表示する。
 TODO.ページネーションを追加する。
 */
-
 const theme = createTheme();
 const Beds = () => {
+
     const dispatch = useAppDispatch();
 
     // 日付を入力するためのフォーム
@@ -40,8 +38,6 @@ const Beds = () => {
     // 日付を設定するためのステータス
     const [date, setDate] = useState(localStorage.getItem('date'));
 
-    const token = useAppSelector(selectToken);
-    
     // 収支の取得状況のステータス
     const status = useAppSelector(selectStatus);
 
@@ -65,7 +61,7 @@ const Beds = () => {
             }
             dispatch(getBedAsync(request));
         }
-        console.log("ロードページ");
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
     // 検索ボタンがクリックされた場合の処理
@@ -114,6 +110,15 @@ const Beds = () => {
                         alignItems: 'center',
                     }}
                 >
+                    <Grid container sx={{ mb: 4, flexGrow: 1 }}>
+                        <Grid item flexGrow={1}>
+                            <Button href="/bed">収支</Button>
+                        </Grid>
+                        <Grid item>
+                            <Button href="/game">ゲーム</Button>
+                        </Grid>
+
+                    </Grid>
                     {/* 日付を選択するためのフィールド */}
                     <TextField
                         id="name"

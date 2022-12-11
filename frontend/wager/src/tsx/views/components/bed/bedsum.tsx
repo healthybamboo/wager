@@ -1,12 +1,9 @@
 import * as React from 'react';
 import {
     Typography,
-    Box,
-    Fab,
     Grid,
 
 } from '@mui/material';
-import AddIcon from '@mui/icons-material/Add';
 
 // 収支の合計部分
 const BedSum = (props: { sum: number }) => {

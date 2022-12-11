@@ -8,13 +8,13 @@ import {
 } from '@mui/material';
 
 
-import { useForm } from "react-hook-form";
+import { useForm} from "react-hook-form";
 import { Stack } from '@mui/system';
 
-import { TBedForm } from '../../../../utils/types';
+import { TBedForm } from '../../../utils/types';
 
-import { postBedAsync } from '../../../../redux/slices/bedSlice';
-import { useAppDispatch } from '../../../../redux/hooks';
+import { postBedAsync } from '../../../redux/slices/bedSlice';
+import { useAppDispatch } from '../../../redux/hooks';
 
 const style = {
     position: 'absolute' as 'absolute',
@@ -92,12 +92,7 @@ export default function BasicModal(props: { open: boolean, handleClose: () => vo
                             InputLabelProps={{
                                 shrink: true,
                             }}
-                            {...register('spend', {
-                                required: {
-                                    value: true,
-                                    message: '入力が必須の項目です。',
-                                }
-                            })}
+                            {...register('spend')}
                         > </TextField>
                         <TextField
                             id="spend"

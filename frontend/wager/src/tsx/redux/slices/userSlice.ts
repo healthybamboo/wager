@@ -1,8 +1,8 @@
-import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit';
+import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import { RootState } from '../store';
-import axios, { AxiosRequestConfig } from 'axios';
+import axios from 'axios';
 
-import {TUser,TSignupForm,TSigninForm} from '../../utils/types';
+import { TUser, TSignupForm, TSigninForm } from '../../utils/types';
 
 // stateの初期値
 const initialState: TUser = {
@@ -25,7 +25,7 @@ export const signinAsync = createAsyncThunk(
             const result = await axios.post('/api/user/login/', {
                 "username": user.username, "password": user.password
             },
-            );
+                config);
             return result.data;
         } catch (error: any) {
             if (!error.response) {
@@ -52,7 +52,7 @@ export const signupAsync = createAsyncThunk(
             const result = await axios.post('/api/user/signup/', {
                 "username": user.username, "password": user.password, "email": user.email
             },
-            );
+                config);
             return result.data;
         } catch (error: any) {
             if (!error.response) {
@@ -75,8 +75,8 @@ export const userSlice = createSlice({
             .addCase(signinAsync.fulfilled, (state, action) => {
                 state.id = action.payload.id;
                 state.name = action.payload.name;
-                state.token =  action.payload.token;
-                localStorage.setItem('token',action.payload.token);
+                state.token = action.payload.token;
+                localStorage.setItem('token', action.payload.token);
                 state.status = 'success';
             })
             .addCase(signinAsync.pending, (state, action) => {
@@ -89,7 +89,7 @@ export const userSlice = createSlice({
             .addCase(signupAsync.fulfilled, (state, action) => {
                 state.id = action.payload.id;
                 state.name = action.payload.name;
-                state.token =  action.payload.token;
+                state.token = action.payload.token;
                 state.status = 'success';
             })
             .addCase(signupAsync.pending, (state, action) => {

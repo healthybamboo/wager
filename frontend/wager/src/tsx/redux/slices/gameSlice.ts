@@ -1,8 +1,8 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import { RootState } from '../store';
-import axios  from 'axios';
+import axios from 'axios';
 
-import { TGame} from '../../utils/types';
+import { TGame } from '../../utils/types';
 
 
 // stateの初期値
@@ -15,20 +15,19 @@ const initialState = {
 export const getGameAsync = createAsyncThunk(
     'game/get',
     async (date: Date, { rejectWithValue }) => {
-        // const config = {
-        //     headers: {
-        //         "Content-Type": "application/json",
-        //     },
-        // }
+        const config = {
+            headers: {
+                "Content-Type": "application/json",
+            },
+            params: {
+                "year": date.getFullYear(),
+                "month": date.getMonth(),
+                "day": date.getDate()
+            }
+        }
 
         try {
-            const result = await axios.get('/api/games/', {
-                params: {
-                    "year": date.getFullYear(),
-                    "month": date.getMonth(),
-                    "day": date.getDate()
-                }
-            });
+            const result = await axios.get('/api/games/', config);
             return result.data;
 
         } catch (error: any) {
@@ -59,7 +58,7 @@ export const postGameAsync = createAsyncThunk(
                 "state": game.state,
                 "archive": game.archive,
             },
-            );
+            config);
             return result.data;
         } catch (error: any) {
             if (!error.response) {

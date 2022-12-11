@@ -1,20 +1,24 @@
+// 編集用のモーダル
+
 import * as React from 'react';
 import {
     Box,
     Button,
+    Typography,
     Modal,
     Grid,
     TextField,
+    Select
 } from '@mui/material';
 
 
-import { useForm } from "react-hook-form";
+import { useForm, SubmitHandler } from "react-hook-form";
 import { Stack } from '@mui/system';
 
 import { TBedForm } from '../../../../utils/types';
 
 import { postBedAsync } from '../../../../redux/slices/bedSlice';
-import { useAppDispatch } from '../../../../redux/hooks';
+import { useAppDispatch, useAppSelector } from '../../../../redux/hooks';
 
 const style = {
     position: 'absolute' as 'absolute',
@@ -121,7 +125,6 @@ export default function BasicModal(props: { open: boolean, handleClose: () => vo
                                 shrink: true,
                             }}
                             {...register('memo')}
-
                         />
                     </Stack>
                 </Box>

@@ -14,7 +14,7 @@ import Container from '@mui/material/Container';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 
 
-import { signupAsync, selectUserName, selectPassword, selectToken, selectUserStatus } from '../../redux/slices/userSlice'
+import { signupAsync, selectUserStatus } from '../../redux/slices/userSlice'
 import { useAppDispatch, useAppSelector } from '../../redux/hooks';
 
 import { Navigate } from "react-router-dom";
@@ -30,12 +30,10 @@ export default function SignUp() {
   const dispatch = useAppDispatch();
 
   //  フォームの設定
-  const { register, handleSubmit, reset } = useForm<TSignupForm>();
+  const { register, handleSubmit } = useForm<TSignupForm>();
 
   // ログイン状況
   const status = useAppSelector(selectUserStatus);
-
-  const token = useAppSelector(selectToken);
 
   // 入力情報の送信
   const onSubmit = (data: TSignupForm) => {

@@ -1,23 +1,10 @@
+import React from "react";
 import {
-    Card,
-    Avatar,
-    Box,
-    Button,
-    Checkbox,
-    FormControlLabel,
-    Grid,
-    Link,
-    Paper,
-    TextField,
-    CardContent,
     Stack,
-    Typography, Container
 } from "@mui/material";
 
 import BedRow from "./bedrow";
 import { TBed } from "../../../utils/types";
-import React from "react";
-import { maxWidth } from "@mui/system";
 
 // 収支の一覧
 type BedListProps = {
