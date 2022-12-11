@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import BedList from '../components/bed/bedlist';
-import BasicModal from "../components/bed/addmodal";
+import BasicModal from "../components/bed/modals/addmodal";
 import BedHeader from "../components/bed/bedheader";
 import BedSum from '../components/bed/bedsum';
 
@@ -12,12 +12,15 @@ import { CssBaseline, Container, Box } from '@mui/material';
 import { useAppDispatch, useAppSelector } from '../../redux/hooks';
 
 import { getBedAsync } from "../../redux/slices/bedSlice";
-import {  TBed, TAuthedGetRequest } from "../../utils/types";
+import { TBed, TGetRequest } from "../../utils/types";
 
 import { useForm } from 'react-hook-form'
 
 import { selectToken } from "../../redux/slices/userSlice";
 import { selectStatus, selectBeds } from "../../redux/slices/bedSlice";
+
+import { useEffect } from "react";
+import { request } from "http";
 
 /*
 日付、
@@ -34,21 +37,42 @@ const Beds = () => {
     const { register, handleSubmit } = useForm<TBed>();
 
 
-    const [date, setDate] = useState("");
+    const [date, setDate] = useState(localStorage.getItem('date'));
 
     const token = useAppSelector(selectToken);
     const status = useAppSelector(selectStatus);
     const beds = useAppSelector(selectBeds);
 
+    /* ページが読み込まれた時に一回だけ処理される */
+    useEffect(() => {
+        const item = localStorage.getItem('date');
+        if (item !== null) {
+            const date = new Date(item);
+            const year = date.getFullYear();
+            const month = date.getMonth() + 1;
+            const day = date.getDate();
+            setDate(year.toString() + "/" + month.toString() + "/" + day.toString());
+
+            const request: TGetRequest = {
+                year: year,
+                month: month,
+                day: day,
+            }
+            dispatch(getBedAsync(request));
+        }
+        console.log("ロードページ");
+    }, []);
+
+    /* 送信された時の処理 */
     const onSubmit = (data: any) => {
         const date = new Date(data.date);
+        localStorage.setItem('date', data.date);
         const year = date.getFullYear();
         const month = date.getMonth() + 1;
         const day = date.getDate();
         setDate(year.toString() + "/" + month.toString() + "/" + day.toString());
 
-        const request: TAuthedGetRequest = {
-            token: token as string,
+        const request: TGetRequest = {
             year: year,
             month: month,
             day: day,
@@ -89,12 +113,13 @@ const Beds = () => {
                         InputLabelProps={{
                             shrink: true,
                         }}
+                        defaultValue={localStorage.getItem('date')}
                         {...register('date')}
 
                     />
                     <Button onClick={handleSubmit(onSubmit)} color={"inherit"} sx={{ bgcolor: "#DDD", mt: 3 }} >検索</Button>
                     {
-                        status ==="rejected" ? <Typography color="error">取得に失敗しました。</Typography> : null
+                        status === "rejected" ? <Typography color="error">取得に失敗しました。</Typography> : null
                     }
                     <Grid >
                         <Card sx={{ m: 5, p: 2 }}>
